@@ -147,10 +147,7 @@ const Graph = () => {
       .selectAll("circle")
       .data(parsedData)
       .join("circle")
-      .attr("fill", (d) => {
-        console.log(d.Doping);
-        return color(d.Doping != "");
-      })
+      .attr("fill", (d) => color(String(d.Doping != "")))
       .attr("cx", (d) => x(d.Year))
       .attr("cy", (d) => y(d.ParsedTime ?? 0))
       .attr("r", 3);
