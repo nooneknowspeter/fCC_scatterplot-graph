@@ -34,13 +34,13 @@ const Graph = () => {
     // );
 
     // init canvas properties
-    const marginTop = 20;
-    const marginRight = 20;
+    const marginTop = 40;
+    const marginRight = 40;
     const marginBottom = 40;
     const marginLeft = 40;
 
-    const width = 1100 - marginLeft - marginRight;
-    const height = 700 - marginTop - marginBottom;
+    const width = 1400 - marginLeft - marginRight;
+    const height = 900 - marginTop - marginBottom;
 
     // create svg canvas
     const svg = d3
@@ -50,6 +50,14 @@ const Graph = () => {
       .attr("width", width)
       .attr("viewBox", [0, 0, width, height])
       .attr("style", "max-width: 100%; height: auto;");
+
+    const parseTime = d3.timeParse("%M:%S");
+
+    // parse time property from data pool from string to date
+    const parsedData = data.map((d) => ({
+      ...d,
+      ParsedTime: parseTime(d.Time), // Convert Time to Date
+    }));
 
     // min and max year from data pool
     const minYear = d3.min(data, (d) => d.Year) ?? 0;
@@ -61,13 +69,6 @@ const Graph = () => {
       .domain([minYear, maxYear])
       .range([0 + marginLeft, width - marginRight]);
 
-    const parseTime = d3.timeParse("%M:%S");
-
-    const parsedData = data.map((d) => ({
-      ...d,
-      ParsedTime: parseTime(d.Time), // Convert Time to Date
-    }));
-
     // min and max time from data pool
     const minTime = d3.min(parsedData, (d) => d.ParsedTime) ?? new Date();
     const maxTime = d3.max(parsedData, (d) => d.ParsedTime) ?? new Date();
@@ -76,7 +77,7 @@ const Graph = () => {
     const y = d3
       .scaleTime()
       .domain([maxTime, minTime])
-      .range([0, height + marginTop]);
+      .range([0 + marginTop, height - marginBottom]);
 
     // x axis
     svg
@@ -106,7 +107,12 @@ const Graph = () => {
     svg
       .append("g")
       .attr("transform", `translate(${marginLeft},0)`)
-      .call(d3.axisLeft(y).tickFormat((d) => d3.timeFormat("%M:%S")(d as Date)))
+      .call(
+        d3
+          .axisLeft(y)
+          .ticks(height / 40)
+          .tickFormat((d) => d3.timeFormat("%M:%S")(d as Date)),
+      )
       .call((g) => g.select(".domain").remove())
       .call((g) =>
         g
@@ -120,30 +126,37 @@ const Graph = () => {
           .select(".tick:last-of-type text")
           .clone()
           .attr("x", 10)
-          .attr("y", -height + marginTop)
+          .attr("y", -height + 70)
           .attr("text-anchor", "start")
           .attr("font-weight", "bold")
           .text("↑ Minutes"),
       );
 
-    console.log(y);
-
     // dot
     const color = d3.scaleOrdinal(d3.schemeCategory10);
 
     svg
-      .append("circle")
-      .attr("cx", 50)
-      .attr("cy", height - 50)
-      .attr("r", 5)
-      .attr("fill", "currentColor");
+      .append("g")
+      .attr("fill", "currentColor")
+      .selectAll("circle")
+      .data(parsedData)
+      .join("circle")
+      .attr("cx", (d) => {
+        console.log(d.Year);
+        return x(d.Year);
+      })
+      .attr("cy", (d) => {
+        console.log(d.ParsedTime);
+        return y(d.ParsedTime);
+      })
+      .attr("r", 3);
   };
 
   return (
     <>
       <div className="flex h-screen flex-col items-center justify-center">
         <div id="visualization">
-          <h1 className="text-center font-bold">
+          <h1 id="title" className="m-3 text-center font-bold">
             Scatter Plot Graph Showing Doping in Professional Bicycle Racing
           </h1>
         </div>
