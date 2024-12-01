@@ -27,9 +27,10 @@ const Graph = () => {
 
     // fetches and parses data from url
     const data: dataInterface[] = (await d3.json(url)) as dataInterface[];
+
     // console.log(
     //   data.map((d) => {
-    //     return d.Time;
+    //     return d.Doping;
     //   }),
     // );
 
@@ -83,7 +84,12 @@ const Graph = () => {
     svg
       .append("g")
       .attr("transform", `translate(0,${height - marginBottom})`)
-      .call(d3.axisBottom(x).ticks(width / 100))
+      .call(
+        d3
+          .axisBottom(x)
+          .ticks(width / 100)
+          .tickFormat((d) => String(d)),
+      )
       .call((g) => g.select(".domain").remove())
       .call((g) =>
         g
@@ -137,18 +143,16 @@ const Graph = () => {
 
     svg
       .append("g")
-      .attr("fill", "currentColor")
+      // .attr("fill", "currentColor")
       .selectAll("circle")
       .data(parsedData)
       .join("circle")
-      .attr("cx", (d) => {
-        console.log(d.Year);
-        return x(d.Year);
+      .attr("fill", (d) => {
+        console.log(d.Doping);
+        return color(d.Doping != "");
       })
-      .attr("cy", (d) => {
-        console.log(d.ParsedTime);
-        return y(d.ParsedTime);
-      })
+      .attr("cx", (d) => x(d.Year))
+      .attr("cy", (d) => y(d.ParsedTime ?? 0))
       .attr("r", 3);
   };
 
