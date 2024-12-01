@@ -155,7 +155,10 @@ const Graph = () => {
 
   return (
     <>
-      <div className="flex h-screen flex-col items-center justify-center">
+      <div
+        className="flex h-screen flex-col items-center justify-center"
+        data-theme="dark"
+      >
         <div id="visualization">
           <h1 id="title" className="m-3 text-center font-bold">
             Scatter Plot Graph Showing Doping in Professional Bicycle Racing
