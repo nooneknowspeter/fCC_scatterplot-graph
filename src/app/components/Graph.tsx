@@ -4,17 +4,6 @@ const Graph = () => {
   return (
     <>
       <div>Graph</div>
-      <div>Graph</div>
-      <div>Graph</div>
-      <div>Graph</div>
-      <div>Graph</div>
-      <div>Graph</div>
-      <div>Graph</div>
-      <div>Graph</div>
-      <div>Graph</div>
-      <div>Graph</div>
-      <div>Graph</div>
-      <div>Graph</div>
     </>
   );
 };
