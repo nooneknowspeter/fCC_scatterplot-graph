@@ -1,12 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const ThemeController = () => {
+  const [currentTheme, setCurrentTheme] = useState("dark");
+
+  const handleThemeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedTheme = event.target.value;
+    setCurrentTheme(selectedTheme);
+    localStorage.setItem("theme", selectedTheme);
+    document.documentElement.setAttribute("data-theme", selectedTheme);
+  };
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") || "black";
+    setCurrentTheme(savedTheme);
+    document.documentElement.setAttribute("data-theme", savedTheme);
+  }, []);
+
   const themes = [
     { name: "Dark", value: "black" },
     { name: "Retro", value: "retro" },
     { name: "Cyberpunk", value: "cyberpunk" },
     { name: "Winter", value: "winter" },
     { name: "Luxury", value: "luxury" },
+    { name: "Halloween", value: "halloween" },
+    { name: "Autumn", value: "autumn" },
+    { name: "Wireframe", value: "wireframe" },
+    { name: "Forest", value: "forest" },
+    { name: "Synthwave", value: "synthwave" },
   ];
 
   return (
@@ -24,6 +44,8 @@ const ThemeController = () => {
                 name="theme-radios"
                 className="radio theme-controller"
                 value={theme.value}
+                checked={currentTheme === theme.value}
+                onChange={handleThemeChange}
               />
             </label>
           </div>
