@@ -157,7 +157,10 @@ const Graph = () => {
     <>
       <div className="flex h-screen flex-col items-center justify-center">
         <div id="visualization">
-          <h1 id="title" className="m-3 text-center font-bold">
+          <h1
+            id="title"
+            className="m-3 text-center font-bold transition-all hover:animate-pulse"
+          >
             Scatter Plot Graph Showing Doping in Professional Bicycle Racing
           </h1>
         </div>

@@ -55,12 +55,12 @@ const ThemeController = () => {
         {/* theme 4 */}
         <div className="form-control">
           <label className="label cursor-pointer gap-4">
-            <span className="label-text">Corporate</span>
+            <span className="label-text">Luxury</span>
             <input
               type="radio"
               name="theme-radios"
               className="radio theme-controller"
-              value="corporate"
+              value="luxury"
             />
           </label>
         </div>
