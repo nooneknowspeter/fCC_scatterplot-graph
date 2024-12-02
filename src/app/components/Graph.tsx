@@ -35,9 +35,9 @@ const Graph = () => {
     // );
 
     // init canvas properties
-    const marginTop = 40;
+    const marginTop = 20;
     const marginRight = 40;
-    const marginBottom = 40;
+    const marginBottom = 80;
     const marginLeft = 40;
 
     const width = 1400 - marginLeft - marginRight;
@@ -134,14 +134,14 @@ const Graph = () => {
           .select(".tick:last-of-type text")
           .clone()
           .attr("x", 10)
-          .attr("y", -height + 70)
+          .attr("y", -height + 100)
           .attr("text-anchor", "start")
           .attr("font-weight", "bold")
           .text("↑ Minutes"),
       );
 
-    // dot
-    const color = d3.scaleOrdinal(d3.schemeCategory10);
+    // dots
+    const color = d3.scaleOrdinal(d3.schemePaired);
 
     svg
       .append("g")
@@ -156,6 +156,43 @@ const Graph = () => {
       .attr("cx", (d) => x(d.Year))
       .attr("cy", (d) => y(d.ParsedTime ?? 0))
       .attr("r", 3);
+
+    // legend
+    const legendContainer = svg.append("g").attr("id", "legend");
+
+    const legend = legendContainer
+      .selectAll("#legend")
+      .data(color.domain())
+      .enter()
+      .append("g")
+      .attr("class", "legend-label")
+      .attr("transform", (d, i) => {
+        return `translate(0, ${height - i * 20 - 10} )`;
+      });
+
+    // colors
+    legend
+      .append("rect")
+      .attr("x", width - 18)
+      .attr("width", 12)
+      .attr("height", 12)
+      .style("fill", color);
+
+    // label
+    legend
+      .append("text")
+      .attr("fill", "currentColor")
+      .attr("x", width - 24)
+      .attr("y", 9)
+      .attr("class", "text-sm")
+      .style("text-anchor", "end")
+      .text((d) => {
+        if (d) {
+          return "Riders with doping allegations";
+        } else {
+          return "No doping allegations";
+        }
+      });
   };
 
   return (
