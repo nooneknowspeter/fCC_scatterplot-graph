@@ -3,7 +3,10 @@ import React from "react";
 const ThemeController = () => {
   return (
     <>
-      <div id="theme-controller" className="absolute right-0 top-0 m-2 w-40">
+      <div
+        id="theme-controller"
+        className="absolute right-0 top-0 m-2 w-40 transition-all"
+      >
         {/* default */}
         <div className="form-control">
           <label className="label cursor-pointer gap-4">

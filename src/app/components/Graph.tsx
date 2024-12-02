@@ -49,8 +49,19 @@ const Graph = () => {
       .append("svg")
       .attr("height", height)
       .attr("width", width)
-      .attr("viewBox", [0, 0, width, height])
-      .attr("style", "max-width: 100%; height: auto;");
+      // .attr("viewBox", [0, 0, width, height])
+      .attr("style", "max-width: 100%; height: auto;")
+      .style("opacity", 0);
+
+    // svg animation
+    svg.transition().duration(2000).style("opacity", 1);
+
+    // title animation
+    d3.select("#title")
+      .transition()
+      .duration(2000)
+      .delay(1000)
+      .style("opacity", 1);
 
     const parseTime = d3.timeParse("%M:%S");
 
@@ -81,8 +92,10 @@ const Graph = () => {
       .range([0 + marginTop, height - marginBottom]);
 
     // x axis
-    svg
+    const xAxis = svg
       .append("g")
+      // .transition()
+      // .duration(2000)
       .attr("transform", `translate(0,${height - marginBottom})`)
       .attr("id", "x-axis")
       .call(
@@ -96,6 +109,9 @@ const Graph = () => {
         g
           .selectAll(".tick line")
           .clone()
+          .transition()
+          .delay(2000)
+          .duration(1000)
           .attr("y2", -height)
           .attr("stroke-opacity", 0.1),
       )
@@ -104,15 +120,25 @@ const Graph = () => {
           .append("text")
           .attr("x", width - 4)
           .attr("y", -4)
+          .transition()
+          .duration(2000)
+          .delay(3000)
           .attr("font-weight", "bold")
           .attr("text-anchor", "end")
           .attr("fill", "currentColor")
           .text("Year →"),
-      );
+      )
+      .style("opacity", 0);
+
+    // x axis animation
+    xAxis.transition().duration(2000).delay(3000).style("opacity", 1);
 
     // y axis
-    svg
+    const yAxis = svg
       .append("g")
+      // .transition()
+      // .duration(2000)
+      // .delay(4000)
       .attr("transform", `translate(${marginLeft},0)`)
       .attr("id", "y-axis")
       .call(
@@ -126,6 +152,9 @@ const Graph = () => {
         g
           .selectAll(".tick line")
           .clone()
+          .transition()
+          .delay(2000)
+          .duration(2000)
           .attr("x2", width)
           .attr("stroke-opacity", 0.1),
       )
@@ -135,17 +164,31 @@ const Graph = () => {
           .clone()
           .attr("x", 10)
           .attr("y", -height + 100)
+          .transition()
+          .duration(2000)
+          .delay(6000)
           .attr("text-anchor", "start")
           .attr("font-weight", "bold")
           .text("↑ Minutes"),
-      );
+      )
+      .style("opacity", 0);
+
+    // y axis animation
+    yAxis.transition().duration(2000).delay(4000).style("opacity", 1);
+
+    // tooltip
+    const tooltip = d3
+      .select("#visualization")
+      .append("div")
+      .attr("class", "tooltip tooltip-open")
+      .style("opacity", 0);
 
     // dots
     const color = d3.scaleOrdinal(d3.schemePaired);
 
     svg
       .append("g")
-      // .attr("fill", "currentColor")
+      .attr("fill", "currentColor")
       .selectAll("circle")
       .data(parsedData)
       .join("circle")
@@ -155,10 +198,32 @@ const Graph = () => {
       .attr("fill", (d) => color(String(d.Doping != "")))
       .attr("cx", (d) => x(d.Year))
       .attr("cy", (d) => y(d.ParsedTime ?? 0))
-      .attr("r", 3);
+      .attr("r", 5)
+      .on("mouseover", function (event, d) {
+        tooltip
+          .transition()
+          .duration(500)
+          .style("opacity", 1)
+          .attr("data-year", d.Year)
+          .attr(
+            "data-tip",
+            `${d.Name} : ${d.Nationality} Year: ${d.Year}, Time: ${d.ParsedTime}, ${d.Doping != "" && d.Doping}`,
+          )
+          .style("left", `${event.x}px`)
+          .style("top", `${event.y}px`);
+      })
+      .on("mouseout", () => {
+        tooltip.transition().duration(500).style("opacity", 0);
+      });
 
     // legend
-    const legendContainer = svg.append("g").attr("id", "legend");
+    const legendContainer = svg
+      .append("g")
+      .attr("id", "legend")
+      .style("opacity", 0);
+
+    // legend animation
+    legendContainer.transition().duration(2000).delay(5000).style("opacity", 1);
 
     const legend = legendContainer
       .selectAll("#legend")
@@ -167,7 +232,7 @@ const Graph = () => {
       .append("g")
       .attr("class", "legend-label")
       .attr("transform", (d, i) => {
-        return `translate(0, ${height - i * 20 - 10} )`;
+        return `translate(0, ${height - i * 20 - 18} )`;
       });
 
     // colors
@@ -201,7 +266,7 @@ const Graph = () => {
         <div id="visualization">
           <h1
             id="title"
-            className="m-3 text-center font-bold transition-all hover:animate-pulse"
+            className="m-3 text-center font-bold opacity-0 transition-all hover:animate-pulse"
           >
             Scatter Plot Graph Showing Doping in Professional Bicycle Racing
           </h1>
