@@ -110,7 +110,7 @@ const Graph = () => {
           .selectAll(".tick line")
           .clone()
           .transition()
-          .delay(2000)
+          .delay(4000)
           .duration(1000)
           .attr("y2", -height)
           .attr("stroke-opacity", 0.1),
@@ -122,7 +122,7 @@ const Graph = () => {
           .attr("y", -4)
           .transition()
           .duration(2000)
-          .delay(3000)
+          .delay(6000)
           .attr("font-weight", "bold")
           .attr("text-anchor", "end")
           .attr("fill", "currentColor")
@@ -153,7 +153,7 @@ const Graph = () => {
           .selectAll(".tick line")
           .clone()
           .transition()
-          .delay(2000)
+          .delay(4000)
           .duration(2000)
           .attr("x2", width)
           .attr("stroke-opacity", 0.1),
@@ -180,7 +180,7 @@ const Graph = () => {
     const tooltip = d3
       .select("#visualization")
       .append("div")
-      .attr("class", "tooltip tooltip-open")
+      .attr("class", "tooltip tooltip-open tooltip-right")
       .style("opacity", 0);
 
     // dots
@@ -199,6 +199,8 @@ const Graph = () => {
       .attr("cx", (d) => x(d.Year))
       .attr("cy", (d) => y(d.ParsedTime ?? 0))
       .attr("r", 5)
+
+      // tooltip on hover
       .on("mouseover", function (event, d) {
         tooltip
           .transition()
@@ -207,10 +209,10 @@ const Graph = () => {
           .attr("data-year", d.Year)
           .attr(
             "data-tip",
-            `${d.Name} : ${d.Nationality} Year: ${d.Year}, Time: ${d.ParsedTime}, ${d.Doping != "" && d.Doping}`,
+            `Name: ${d.Name} Nationality: ${d.Nationality} Year: ${d.Year} ${d.Doping != "" ? d.Doping : ""}`,
           )
-          .style("left", `${event.x}px`)
-          .style("top", `${event.y}px`);
+          .style("left", `${event.x - innerHeight * 0.18}px`)
+          .style("top", `${event.y - innerWidth / 2 - innerHeight * 0.07}px`);
       })
       .on("mouseout", () => {
         tooltip.transition().duration(500).style("opacity", 0);
@@ -237,27 +239,32 @@ const Graph = () => {
 
     // colors
     legend
-      .append("rect")
-      .attr("x", width - 18)
-      .attr("width", 12)
-      .attr("height", 12)
+      .append("circle")
+      .attr("cx", width - 18)
+      .attr("r", 6)
       .style("fill", color);
 
-    // label
+    // legend label data
+    const legendData = [
+      "Riders with doping allegations",
+      "No doping allegations",
+    ];
+
+    // labels
     legend
+      .exit()
+      .data(legendData)
+      .enter()
       .append("text")
       .attr("fill", "currentColor")
-      .attr("x", width - 24)
-      .attr("y", 9)
+      .attr("transform", (d, i) => {
+        return `translate(0, ${height - i * 20 - 18} )`;
+      })
+      .attr("x", width - 30)
+      .attr("y", 4)
       .attr("class", "text-sm")
       .style("text-anchor", "end")
-      .text((d) => {
-        if (d) {
-          return "Riders with doping allegations";
-        } else {
-          return "No doping allegations";
-        }
-      });
+      .text((d) => d);
   };
 
   return (
@@ -266,7 +273,7 @@ const Graph = () => {
         <div id="visualization">
           <h1
             id="title"
-            className="m-3 text-center font-bold opacity-0 transition-all hover:animate-pulse"
+            className="m-3 text-center font-bold opacity-0 transition-all"
           >
             Scatter Plot Graph Showing Doping in Professional Bicycle Racing
           </h1>
