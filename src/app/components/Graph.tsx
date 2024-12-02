@@ -84,6 +84,7 @@ const Graph = () => {
     svg
       .append("g")
       .attr("transform", `translate(0,${height - marginBottom})`)
+      .attr("id", "x-axis")
       .call(
         d3
           .axisBottom(x)
@@ -113,6 +114,7 @@ const Graph = () => {
     svg
       .append("g")
       .attr("transform", `translate(${marginLeft},0)`)
+      .attr("id", "y-axis")
       .call(
         d3
           .axisLeft(y)
@@ -147,6 +149,9 @@ const Graph = () => {
       .selectAll("circle")
       .data(parsedData)
       .join("circle")
+      .attr("class", "dot")
+      .attr("data-xvalue", (d) => d.Year)
+      .attr("data-yvalue", (d) => String(d.ParsedTime))
       .attr("fill", (d) => color(String(d.Doping != "")))
       .attr("cx", (d) => x(d.Year))
       .attr("cy", (d) => y(d.ParsedTime ?? 0))
