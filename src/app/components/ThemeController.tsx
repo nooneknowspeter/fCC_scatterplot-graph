@@ -1,6 +1,14 @@
 import React from "react";
 
 const ThemeController = () => {
+  const themes = [
+    { name: "Dark", value: "black" },
+    { name: "Retro", value: "retro" },
+    { name: "Cyberpunk", value: "cyberpunk" },
+    { name: "Winter", value: "winter" },
+    { name: "Luxury", value: "luxury" },
+  ];
+
   return (
     <>
       <div
