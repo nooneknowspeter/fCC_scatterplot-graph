@@ -201,7 +201,7 @@ const Graph = () => {
       .attr("r", 5)
 
       // tooltip on hover
-      .on("mouseover", function (event, d) {
+      .on("mouseover", (event, d) => {
         tooltip
           .transition()
           .duration(500)
