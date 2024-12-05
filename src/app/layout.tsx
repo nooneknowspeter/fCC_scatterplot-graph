@@ -34,10 +34,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <script
+        {/* <script
           src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"
           defer
-        ></script>
+        ></script> */}
       </head>
       <body className={`${spaceGrotesk.variable} antialiased`}>{children}</body>
     </html>
